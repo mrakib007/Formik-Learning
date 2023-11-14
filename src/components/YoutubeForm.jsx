@@ -1,0 +1,152 @@
+// import { useFormik } from "formik";
+import { Formik, Form, Field, ErrorMessage, FieldArray } from "formik";
+import * as Yup from "yup";
+import TextError from "../components/TextError";
+
+const initialValues = {
+  name: "",
+  email: "",
+  channel: "",
+  comments: "",
+  address: "",
+  social: {
+    facebook: "",
+    twitter: ""
+  },
+  phoneNumbers: ["", ""],
+  phNumbers: [""]
+};
+const onSubmit = (values) => {
+  console.log("Form data", values);
+};
+
+const validationSchema = Yup.object({
+  name: Yup.string().required("Required!"),
+  email: Yup.string().email("Invaqlid email format!").required("required!"),
+  channel: Yup.string().required("required!"),
+  address: Yup.string().required("required")
+});
+
+function YoutubeForm() {
+  // const formik = useFormik({
+  //   initialValues,
+  //   onSubmit,
+  //   validationSchema
+  // });
+
+  // console.log("vaisited field", formik.touched);
+
+  return (
+    <Formik
+      initialValues={initialValues}
+      validationSchema={validationSchema}
+      onSubmit={onSubmit}
+    >
+      {/* <Form onSubmit={formik.handleSubmit}> */}
+      <Form>
+        <div className="form-control">
+          <label htmlFor="name">Name</label>
+          <Field
+            type="text"
+            id="name"
+            name="name"
+            // {...formik.getFieldProps("name")}
+          />
+          {/* {formik.touched.name && formik.errors.name ? (
+            <div className="error">{formik.errors.name}</div>
+          ) : null} */}
+          <ErrorMessage name="name" component={TextError} />
+        </div>
+        <div className="form-control">
+          <label htmlFor="name">Email</label>
+          <Field type="text" id="email" name="email" />
+          <ErrorMessage name="email">
+            {(errorMessage) => <div className="error">{errorMessage}</div>}
+          </ErrorMessage>
+        </div>
+        <div className="form-control">
+          <label htmlFor="channel">Channel</label>
+          <Field
+            type="text"
+            id="channel"
+            name="channel"
+            placeHolder="youtube channel name"
+          />
+          <ErrorMessage name="channel" />
+        </div>
+
+        <div className="form-control">
+          <label htmlFor="comments"></label>
+          <Field as="textarea" id="comments" name="comments" />
+          {/* <Field component="textarea" id="comments" name="comments"/> */}
+        </div>
+        <div className="form-control">
+          <label htmlFor="address">Address</label>
+          <Field name="address">
+            {(props) => {
+              const { field, form, meta } = props;
+              console.log("render props", props);
+              return (
+                <div>
+                  <input type="text" name="address" id="address" {...field} />
+                  {meta.touched && meta.error ? <div>{meta.error}</div> : null}
+                </div>
+              );
+            }}
+          </Field>
+        </div>
+        <div className="form-control">
+          <label htmlFor="facebook">Facebook Profile</label>
+          <Field type="text" id="facebook" name="social.facebook" />
+        </div>
+        <div className="form-control">
+          <label htmlFor="twitter">Twitter Profile</label>
+          <Field type="text" id="twitter" name="social.twitter" />
+        </div>
+
+        <div className="form-control">
+          <label htmlFor="primaryPh">Primary Phone Number</label>
+          <Field type="text" id="primaryPh" name="phoneNumbers[0]" />
+        </div>
+        <div className="form-control">
+          <label htmlFor="secondaryPh">Secondary Phone Number</label>
+          <Field type="text" id="secondaryPh" name="phoneNumbers[1]" />
+        </div>
+
+        <div className="form-control">
+          <label htmlFor="">List of phone numbers</label>
+          <FieldArray name="phNumbers">
+            {(fieldArrayProps) => {
+              console.log("fieldArrayProps", fieldArrayProps);
+              const { push, remove, form } = fieldArrayProps;
+              const { values } = form;
+              const { phNumbers } = values;
+              return (
+                <div>
+                  {phNumbers.map((phNumber, index) => (
+                    <div key={index}>
+                      <Field name={`phNumbers[${index}]`} />
+                      {index > 0 && (
+                        <button type="button" onClick={() => remove(index)}>
+                          -
+                        </button>
+                      )}
+                      <button type="button" onClick={() => push("")}>
+                        +
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              );
+            }}
+          </FieldArray>
+        </div>
+        <button type="submit">Submit</button>
+      </Form>
+    </Formik>
+  );
+}
+
+//Playlist video 22 done.
+
+export default YoutubeForm;
