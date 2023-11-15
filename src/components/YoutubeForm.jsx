@@ -1,5 +1,5 @@
 // import { useFormik } from "formik";
-import { Formik, Form, Field, ErrorMessage, FieldArray } from "formik";
+import { Formik, Form, Field, ErrorMessage, FieldArray,FastField } from "formik";
 import * as Yup from "yup";
 import TextError from "../components/TextError";
 
@@ -41,6 +41,8 @@ function YoutubeForm() {
       initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={onSubmit}
+      validateOnChange={false}
+      validateOnBlur={false}
     >
       {/* <Form onSubmit={formik.handleSubmit}> */}
       <Form>
@@ -76,16 +78,18 @@ function YoutubeForm() {
         </div>
 
         <div className="form-control">
-          <label htmlFor="comments"></label>
+          <label htmlFor="comments">Comments</label>
           <Field as="textarea" id="comments" name="comments" />
           {/* <Field component="textarea" id="comments" name="comments"/> */}
         </div>
         <div className="form-control">
           <label htmlFor="address">Address</label>
-          <Field name="address">
+          {/* <Field name="address"> */}
+          {/* using fast field */}
+          <FastField name="address"> 
             {(props) => {
+              console.log('Field render');
               const { field, form, meta } = props;
-              console.log("render props", props);
               return (
                 <div>
                   <input type="text" name="address" id="address" {...field} />
@@ -93,7 +97,7 @@ function YoutubeForm() {
                 </div>
               );
             }}
-          </Field>
+          </FastField>
         </div>
         <div className="form-control">
           <label htmlFor="facebook">Facebook Profile</label>
@@ -117,10 +121,11 @@ function YoutubeForm() {
           <label htmlFor="">List of phone numbers</label>
           <FieldArray name="phNumbers">
             {(fieldArrayProps) => {
-              console.log("fieldArrayProps", fieldArrayProps);
+              // console.log("fieldArrayProps", fieldArrayProps);
               const { push, remove, form } = fieldArrayProps;
               const { values } = form;
               const { phNumbers } = values;
+              console.log('Form Errors',form.errors);
               return (
                 <div>
                   {phNumbers.map((phNumber, index) => (
@@ -147,6 +152,5 @@ function YoutubeForm() {
   );
 }
 
-//Playlist video 22 done.
 
 export default YoutubeForm;
