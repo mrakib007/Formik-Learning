@@ -50,6 +50,7 @@ function YoutubeForm() {
       initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={onSubmit}
+    // validateOnMount //disabled submit button at the page load time
     // validateOnChange={false}
     // validateOnBlur={false}
     >
@@ -160,16 +161,17 @@ function YoutubeForm() {
                   }}
                 </FieldArray>
               </div>
-              <button type="button" onClick={()=>formik.validateField('comments')}>Validate Comments</button>
-              <button type="button" onClick={()=>formik.validateForm()}>Validate All</button>
-              <button type="button" onClick={()=>formik.setFieldTouched('comments')}>Visit Comments</button>
-              <button type="button" onClick={()=>formik.setTouched({
+              <button type="button" onClick={() => formik.validateField('comments')}>Validate Comments</button>
+              <button type="button" onClick={() => formik.validateForm()}>Validate All</button>
+              <button type="button" onClick={() => formik.setFieldTouched('comments')}>Visit Comments</button>
+              <button type="button" onClick={() => formik.setTouched({
                 name: true,
                 email: true,
                 channel: true,
                 comments: true,
               })}>Visit fields</button>
-              <button type="submit">Submit</button>
+              <button type="submit" disabled={!formik.isValid}>Submit</button>
+              {/* <button type="submit" disabled={!(formik.isValid && formik.dirty)}>Submit</button> */}
             </Form>
           )
         }
